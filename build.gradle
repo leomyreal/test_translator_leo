@@ -1,0 +1,73 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
+    }
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
+    }
+}
+
+plugins {
+    id "java"
+    id "org.jetbrains.intellij" version "0.3.5"
+}
+
+apply plugin: 'idea'
+apply plugin: 'org.jetbrains.intellij'
+apply plugin: 'java'
+apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'jacoco'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+allprojects {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+}
+
+intellij {
+    pluginName 'Translator'
+    updateSinceUntilBuild false
+    publishPlugin {
+        username intellijPublishUsername
+        password intellijPublishPassword
+    }
+}
+
+//gradle.properties 테스트
+task printProps {
+    doLast {
+        println intellijPublishUsername
+        println intellijPublishPassword
+    }
+}
+
+group 'org.intellij.plugin.jojoldu'
+version '0.0.15'
+description 'Translator for IntelliJ IDEA Korean User'
+
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+dependencies {
+    compile group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.25.1'
+    compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.25.1'
+
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    compile group: 'com.optimaize.languagedetector', name: 'language-detector', version: '0.6'
+    compile group: 'com.google.guava', name: 'guava', version: '21.0'
+
+    testCompile 'junit:junit:4.12'
+}
